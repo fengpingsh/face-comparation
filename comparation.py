@@ -53,6 +53,7 @@ import glob
 from skimage import io
 import numpy as np
 import time
+from math import sqrt
 if len(sys.argv) != 6:
     print(
         "Call this program like this:\n"
@@ -61,6 +62,12 @@ if len(sys.argv) != 6:
         "    http://dlib.net/files/shape_predictor_5_face_landmarks.dat.bz2\n"
         "    http://dlib.net/files/dlib_face_recognition_resnet_model_v1.dat.bz2")
     exit()
+
+
+def euclidean_dist(vector_x, vector_y):
+    if len(vector_x) != len(vector_y):
+        raise Exception('Vectors must be same dimensions')
+    return sum((vector_x[dim] - vector_y[dim]) ** 2 for dim in range(len(vector_x)))
 
 predictor_path = sys.argv[1]
 face_rec_model_path = sys.argv[2]
@@ -91,6 +98,7 @@ print("descriptor2 shape = {}, time = {}".format( face_descriptor2.shape, time.t
 
 tick1 = time.time()
 val = np.linalg.norm(np.array(face_descriptor1) - np.array(face_descriptor2))
+#val = 1 - euclidean_dist(face_descriptor1, face_descriptor2)
 print("value = {}, time = {}".format(1 - val, time.time() - tick1))
 hmerge = np.hstack((img1, img2)) #水平拼接
 #vmerge = np.vstack((img1, img2)) #垂直拼接

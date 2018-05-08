@@ -81,7 +81,6 @@ detector = dlib.get_frontal_face_detector()
 sp = dlib.shape_predictor(predictor_path)
 facerec = dlib.face_recognition_model_v1(face_rec_model_path)
 
-#win = dlib.image_window()
 img1 = cv2.imread(faces1_folder_path)
 print(img1.size, img1.shape)
 tick1 = time.time()

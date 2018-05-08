@@ -1,5 +1,4 @@
-comparation.py: A very simple demo for face comparation using dlib
-dlib_realtime_facerecognition.py: A real time face detection and recognition demo using dlib
+A very simple demo for face comparation and real time face recognition using dlib
 =================================================================================
 
 # Precondition
@@ -20,4 +19,4 @@ The canditates photos can be specified using the param --faces. You can point to
 known faces in different sub folders in which only includes the faces. We suggest you place the front , 
 left-turn, right-turn, looking-up and looking-down faces for each canditate.
 
-#TODO
+# TODO

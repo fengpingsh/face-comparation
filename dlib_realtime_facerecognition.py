@@ -21,7 +21,7 @@ ap.add_argument("-l", "--landmark", required=True,
 	help="path to input landmark file")
 ap.add_argument("-m", "--model", required=True,
 	help="path to input model file")
-ap.add_argument("-c", "--confidence", default=.5,
+ap.add_argument("-c", "--confidence", default=.6,
 	help="confidence threshold")
 ap.add_argument("-f", "--faces", required=True,
 	help="path to known faces folder")
@@ -111,8 +111,7 @@ KNOWN_FACE_DICT = load_known_faces(args['faces'])
 # open a pointer to the video stream thread and allow the buffer to
 # start to fill, then start the FPS counter
 print("[INFO] starting the video stream and FPS counter...")
-#vs = VideoStream(src=0).start()
-vs = VideoStream(src="rtsp://admin:Baustem123@192.168.3.22:554/Streaming/Channels/101?transportmode=unicast&profile=Profile_1").start()
+vs = VideoStream(src=0).start()
 #time.sleep(1)
 fps = FPS().start()
 
@@ -133,19 +132,6 @@ while True:
 			avg = gray.copy().astype("float")
 			continue
 		motions = motion(gray)
-
-		'''
-		for (left, top, right, bottom) in motions:
-			cv2.rectangle(image_for_result, (left, top), (right, bottom), (255, 0, 0), 2)
-			image = frame[top*PREPROCESS_DIMS:bottom*PREPROCESS_DIMS, left*PREPROCESS_DIMS:right*PREPROCESS_DIMS]
-			cv2.imwrite('results/' + 'detect_' + str(time.time()) + '.jpg', image)
-			predictions = predict(image)
-			for i, (_left, _top, _right, _bottom) in enumerate(predictions):
-				print ("detect {}/{} faces".format(i+1, len(predictions)))
-				cv2.imwrite('results/' + 'face_' + str(time.time()) + '.jpg', image[_top:_bottom, _left:_right])
-		cv2.imshow("Output", frame)
-		key = cv2.waitKey(1) & 0xFF
-		'''
 		for (left, top, right, bottom) in motions:
 			#zoom in the motion result
 			left *= PREPROCESS_DIMS
@@ -158,6 +144,9 @@ while True:
 			predictions = predict(image)
 			# loop over our predictions
 			for i, (_left, _top, _right, _bottom) in enumerate(predictions):
+				#filter the face size
+				if _right - _left < 90:
+					continue
 				#store the face detected
 				cv2.imwrite('results/' + 'face_' + str(time.time()) + '.jpg', image[_top:_bottom, _left:_right])
 				#draw faces in blue
@@ -167,7 +156,7 @@ while True:
 				matched = find_known_face(KNOWN_FACE_DICT, face_descriptor)
 				print matched
 				for i in range(len(matched)):
-					cv2.putText(frame, "{}:{:.2f}".format(matched[i][0][0:2], 1 - matched[i][1]),
+					cv2.putText(frame, "{}:{:.2f}".format(matched[i][0], 1 - matched[i][1]),
 								(left , top + _top +  i * 15), cv2.FONT_HERSHEY_DUPLEX, 1,
 								(0, 255, 0), 1)
 					if i > 0:

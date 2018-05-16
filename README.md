@@ -45,11 +45,6 @@ During the running of this demo, you can press 'q' to quit and 's' to store the 
 │   ├── right.jpg  
 │   └── up.jpg  
 └── name2  
-    ├── down.jpg  
-    ├── front.jpg  
-    ├── left.jpg  
-    ├── right.jpg  
-    └── up.jpg  
 You can place as many known faces as you wish.
 
 #### Structure of the results folder
